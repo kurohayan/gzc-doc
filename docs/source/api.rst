@@ -121,8 +121,8 @@ channel             存证渠道：1.自助存证  2.api存证                  
 pageNum                 当前页
 pageSize                每页显示数量
 pages                   总页数
-size                    总数
-total                   当前返回数量
+size                    当前返回数量
+total                   总数
 list                    存证数据对象info
 info.ano                存证编号
 info.fileHash           文件hash
