@@ -98,7 +98,7 @@ b.接口调用失败，则返回JSON数据示例为：::
 =================  ============================================ ============
 参数名 				描述                                          是否可选
 =================  ============================================ ============
-attestationType     存证类型 1.文件存证  2.hash存证                   非必选
+attestationType     存证类型 8.hash存证   默认为8                     非必选
 startTime           开始时间                                         非必选
 endTime             结束时间                                         非必选
 pageNum             当前页码                                         非必选
@@ -106,7 +106,7 @@ pageSize            每页显示数量 最大20                                �
 fileName            文件名称                                         非必选
 fileLabel           文件标签                                         非必选
 fileHash            文件hash                                         非必选
-channel             存证渠道：1.自助存证  2.api存证                      非必选
+channel             存证渠道：1.自助存证  2.api存证                     非必选
 =================  ============================================ ============
 
 
@@ -134,12 +134,18 @@ info.state              1.上链中,2.上链失败,3.上链成功
 
 以java为例::
 
-    // 构建请求参数
-    Map<String ,Object> body = new HashMap<>();
-    body.put("evidenceType",1);
-    httpRequest.body(JSONUtil.toJsonStr(body));
-    HttpResponse httpResponse = httpRequest.execute();
-    String result = httpResponse.body();
+    // API path
+        String apiName = "/attestation/list";
+        HttpRequest httpRequest = createRequestPost(apiName);
+        // 构建请求参数
+        Map<String ,Object> body = new HashMap<>();
+//        body.put("attestationId","");
+        httpRequest.body(JSONUtil.toJsonStr(body));
+        String result;
+        try (HttpResponse httpResponse = httpRequest.execute()) {
+            result = httpResponse.body();
+        }
+        JSON json = JSONUtil.parse(resulY
 
 返回结果示例:
 a.接口调用成功，则返回JSON数据示例为：::
@@ -220,6 +226,7 @@ b.接口调用失败，则返回JSON数据示例为：::
 参数名 				描述                                    是否可选
 =================  ======================================= ================
 ano                  存证编号                                   必选
+type                 存证类型 8:hash存证 默认为8                  非必选
 =================  ======================================= ================
 
 返回的data
@@ -244,12 +251,16 @@ blockchainHash              链hash
 
 以java为例::
 
-	// 构建请求参数
+	String apiName = "/attestation/info";
+    HttpRequest httpRequest = createRequestPost(apiName);
+    // 构建请求参数
     Map<String ,Object> body = new HashMap<>();
-    body.put("attestationId","did:bid:efsRrRCTEmA7ZWodWFPkjMW2u5Y4hikv");
+    body.put("id","840175805404684288");
     httpRequest.body(JSONUtil.toJsonStr(body));
-    HttpResponse httpResponse = httpRequest.execute();
-    String result = httpResponse.body();
+    String result;
+    try (HttpResponse httpResponse = httpRequest.execute()) {
+        result = httpResponse.body();
+    }
 
 返回结果示例:
 a.接口调用成功，则返回JSON数据示例为：::
