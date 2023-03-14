@@ -140,31 +140,6 @@ java::
             System.out.println(json.toString());
         }
 
-        @Test
-        public void download() throws Exception {
-            // API path
-            String ano = "840175805404684288";
-            String apiName = "/attestation/cert?ano=" + ano;
-            HttpRequest httpRequest = createRequestGet(apiName);
-            try (HttpResponse httpResponse = httpRequest.execute()) {
-                if (httpResponse.getStatus() != 200) {
-                    System.out.println("未查询到可用资源:" + httpResponse.body());
-                    return;
-                }
-                String body = httpResponse.body();
-                JSONObject jsonObject = JSONUtil.parseObj(body);
-                String statusCode = jsonObject.getStr("statusCode");
-                if ("000000".equals(statusCode)) {
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    String pdfUrl = data.getStr("pdfUrl");
-                    HttpUtil.download(pdfUrl, Files.newOutputStream(Paths.get("/tmp/" + ano + ".pdf")), true);
-                } else {
-                    System.out.println("未查询到可用资源:" + httpResponse.body());
-                }
-            }
-
-        }
-
         private HttpRequest createRequestPost(String apiName) throws Exception {
             // 构建请求
             HttpRequest httpRequest = HttpUtil.createPost(uri + apiName);
