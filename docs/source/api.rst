@@ -134,17 +134,17 @@ info.state              1.上链中,2.上链失败,3.上链成功
 
 以java为例::
 
-        // API path
-        String apiName = "/attestation/list";
-        HttpRequest httpRequest = createRequestPost(apiName);
-        // 构建请求参数
-        Map<String ,Object> body = new HashMap<>();
-        httpRequest.body(JSONUtil.toJsonStr(body));
-        String result;
-        try (HttpResponse httpResponse = httpRequest.execute()) {
-            result = httpResponse.body();
-        }
-        JSON json = JSONUtil.parse(resulY
+    // API path
+    String apiName = "/attestation/list";
+    HttpRequest httpRequest = createRequestPost(apiName);
+    // 构建请求参数
+    Map<String ,Object> body = new HashMap<>();
+    httpRequest.body(JSONUtil.toJsonStr(body));
+    String result;
+    try (HttpResponse httpResponse = httpRequest.execute()) {
+        result = httpResponse.body();
+    }
+    JSON json = JSONUtil.parse(resulY
 
 返回结果示例:
 a.接口调用成功，则返回JSON数据示例为：::
