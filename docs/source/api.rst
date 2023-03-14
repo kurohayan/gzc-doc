@@ -134,12 +134,11 @@ info.state              1.上链中,2.上链失败,3.上链成功
 
 以java为例::
 
-    // API path
+        // API path
         String apiName = "/attestation/list";
         HttpRequest httpRequest = createRequestPost(apiName);
         // 构建请求参数
         Map<String ,Object> body = new HashMap<>();
-//        body.put("attestationId","");
         httpRequest.body(JSONUtil.toJsonStr(body));
         String result;
         try (HttpResponse httpResponse = httpRequest.execute()) {
