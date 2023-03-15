@@ -251,7 +251,8 @@ blockchainHash              链hash
 
 以java为例::
 
-	String apiName = "/attestation/info";
+    // API path
+    String apiName = "/attestation/info";
     HttpRequest httpRequest = createRequestPost(apiName);
     // 构建请求参数
     Map<String ,Object> body = new HashMap<>();
@@ -270,7 +271,7 @@ a.接口调用成功，则返回JSON数据示例为：::
       "data": {
         "ano": "842357643523006464",
         "status": 3,
-        "category": 8,
+        "attestationType": 8,
         "createTime": "2023-03-14 11:08:32",
         "fileHash": "98df1f1dfb3b1a123c1517912dc70447aa61c6be532ac99de973abb6219e1653",
         "fileName": "test1",
