@@ -40,7 +40,7 @@ HashItem.hash       文件hash                                   必选
 ===================  ================================
 list                    bean对象列表
 bean.hash               文件hash
-bean.attestationId      存证id
+bean.ano                存证id
 ===================  ================================
 
 以java为例::
@@ -130,7 +130,7 @@ info.fileLabel          文件标签
 info.fileName           文件名
 info.createTime         创建时间
 info.attestationType    存证类型 8:hash存证
-info.state              1.上链中,2.上链失败,3.上链成功
+info.status             1.上链中,2.上链失败,3.上链成功
 =====================  ===========================================================
 
 
@@ -146,7 +146,6 @@ info.state              1.上链中,2.上链失败,3.上链成功
     try (HttpResponse httpResponse = httpRequest.execute()) {
         result = httpResponse.body();
     }
-    JSON json = JSONUtil.parse(resulY
 
 返回结果示例:
 a.接口调用成功，则返回JSON数据示例为：::
