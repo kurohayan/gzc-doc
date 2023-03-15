@@ -11,7 +11,7 @@
 公证处API地址：`https://gzc.com/shimakaze/api`
 
 请求路径=API地址+接口名称，比如hash存证接口的名称是/attestation/hash，则请求路径为
-`https://gzc.com/shimakaze/api/evidence/hash`
+`https://gzc.com/shimakaze/api/attestation/hash`
 
 
 方法
