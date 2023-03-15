@@ -274,6 +274,7 @@ a.接口调用成功，则返回JSON数据示例为：::
         "attestationType": 8,
         "createTime": "2023-03-14 11:08:32",
         "fileHash": "98df1f1dfb3b1a123c1517912dc70447aa61c6be532ac99de973abb6219e1653",
+        "blockchainHash": "55f3c66e0d0a8597b9d26d40c793bc01d6f9d03a38a6130eaa1c42c41c2820fd",
         "fileName": "test1",
         "label": "标签",
         "pdfUrl": "https://hbq.obs.cn-east-3.myhuaweicloud.com/staging/pdf/842357643523006464.pdf"
