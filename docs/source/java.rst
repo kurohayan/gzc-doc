@@ -182,7 +182,7 @@ java::
         }
 
         private HttpRequest setHttpRequestHeaders(HttpRequest httpRequest) throws Exception {
-            // RSA私钥文件路径
+            // securityKey
             String securityKey = "689d7ff1ebf746389f65c32112c27c76";
             // 请求头
             String requestId = IdUtil.simpleUUID();
@@ -247,7 +247,7 @@ java::
         }
 
         public static void main(String[] args) {
-            // 私钥文件路径
+            // securityKey
             String securityKey = "689d7ff1ebf746389f65c32112c27c76";
 
             // 请求头
