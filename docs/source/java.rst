@@ -54,34 +54,6 @@ java::
 
         private ObsClient obsClient;
 
-        @Test
-        public void testSubmitEnforcerAttestation() throws Exception {
-            String apiName = "/attestation/enforcer";
-            HttpRequest httpRequest = createRequestPost(apiName);
-            // 构建请求参数
-            File file = new File("/tmp/123.mp4");
-            String ossKey = uploadOss(file);
-            SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
-            param.setName("test");
-            param.setDeviceId("E123456");
-            param.setAddress("地址");
-            param.setLabel("标签");
-            param.setEvidenceType(2);
-            param.setStartTime("2023-04-04 13:10:12");
-            param.setEndTime("2023-04-04 13:30:12");
-            param.setSaveTime("2023-04-04 14:10:10");
-            param.setFileHash(SecureUtil.sha256(file));
-            param.setFileName(file.getName());
-            param.setFileOssKey(ossKey);
-            param.setFileSize(file.length());
-            httpRequest.body(JSONUtil.toJsonStr(param));
-            String result;
-            try (HttpResponse httpResponse = httpRequest.execute()) {
-                result = httpResponse.body();
-            }
-            JSON json = JSONUtil.parse(result);
-            System.out.println(json.toString());
-        }
         /**
          *
          * @throws Exception
@@ -165,6 +137,35 @@ java::
                 }
             }
 
+        }
+
+        @Test
+        public void testSubmitEnforcerAttestation() throws Exception {
+            String apiName = "/attestation/enforcer";
+            HttpRequest httpRequest = createRequestPost(apiName);
+            // 构建请求参数
+            File file = new File("/tmp/123.mp4");
+            String ossKey = uploadOss(file);
+            SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
+            param.setName("test");
+            param.setDeviceId("E123456");
+            param.setAddress("地址");
+            param.setLabel("标签");
+            param.setEvidenceType(2);
+            param.setStartTime("2023-04-04 13:10:12");
+            param.setEndTime("2023-04-04 13:30:12");
+            param.setSaveTime("2023-04-04 14:10:10");
+            param.setFileHash(SecureUtil.sha256(file));
+            param.setFileName(file.getName());
+            param.setFileOssKey(ossKey);
+            param.setFileSize(file.length());
+            httpRequest.body(JSONUtil.toJsonStr(param));
+            String result;
+            try (HttpResponse httpResponse = httpRequest.execute()) {
+                result = httpResponse.body();
+            }
+            JSON json = JSONUtil.parse(result);
+            System.out.println(json.toString());
         }
 
         private HttpRequest createRequestPost(String apiName) throws Exception {
