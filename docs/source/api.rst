@@ -290,7 +290,7 @@ b.接口调用失败，则返回JSON数据示例为：::
       "errorMessage": "未查询到数据"
     }
 
-hash存证（sha256） - /attestation/enforcer
+执法记录仪取证 - /attestation/enforcer
 ------------------------------------
 用户进行hash存证。
 
