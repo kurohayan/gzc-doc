@@ -70,10 +70,10 @@ java::
             param.setStartTime("2023-04-04 13:10:12");
             param.setEndTime("2023-04-04 13:30:12");
             param.setSaveTime("2023-04-04 14:10:10");
-            param.setFileHash(SecureUtil.sha256(RandomUtil.randomNumbers(6)));
+            param.setFileHash(SecureUtil.sha256(file));
             param.setFileName(file.getName());
             param.setFileOssKey(ossKey);
-            param.setFileSize(1234L);
+            param.setFileSize(file.length());
             httpRequest.body(JSONUtil.toJsonStr(param));
             String result;
             try (HttpResponse httpResponse = httpRequest.execute()) {

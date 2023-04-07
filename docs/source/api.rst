@@ -330,6 +330,8 @@ attestationId            存证编号
     String apiName = "/attestation/enforcer";
     HttpRequest httpRequest = createRequestPost(apiName);
     // 构建请求参数
+    File file = new File("/tmp/123.mp4");
+    String ossKey = uploadOss(file);
     SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
     param.setName("test");
     param.setDeviceId("E123456");
@@ -339,10 +341,10 @@ attestationId            存证编号
     param.setStartTime("2023-04-04 13:10:12");
     param.setEndTime("2023-04-04 13:30:12");
     param.setSaveTime("2023-04-04 14:10:10");
-    param.setFileHash(SecureUtil.sha256(RandomUtil.randomNumbers(6)));
-    param.setFileName("文件名.mp4");
-    param.setFileOssKey("enforcer/文件名.mp4");
-    param.setFileSize(1234L);
+    param.setFileHash(SecureUtil.sha256(file));
+    param.setFileName(file.getName());
+    param.setFileOssKey(ossKey);
+    param.setFileSize(file.length());
     httpRequest.body(JSONUtil.toJsonStr(param));
     String result;
     try (HttpResponse httpResponse = httpRequest.execute()) {
@@ -355,12 +357,7 @@ a.接口调用成功，则返回JSON数据示例为：::
     {
       "flag": true,
       "data": {
-        "result": [
-          {
-            "hash": "98df1f1dfb3b1a123c1517912dc70447aa61c6be532ac99de973abb6219e1653",
-            "ano": 840175805404684288
-          }
-        ]
+        "attestationId": "840175805404684288"
       },
       "statusCode": "000000",
       "errorMessage": "操作成功"
