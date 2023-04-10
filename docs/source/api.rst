@@ -310,7 +310,7 @@ fileName            文件名                                     必选
 fileOssKey          文件上传到oss后的key                         必选
 address             取证地址                                    必选
 startTime           取证开始时间                                 必选
-endTime             取证结束时间                                 必选
+endTime             取证结束时间                                 非必选
 saveTime            上传时间                                    必选
 =================  ======================================= ================
 
