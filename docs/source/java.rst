@@ -35,7 +35,6 @@ java::
     import cn.hutool.json.JSON;
     import cn.hutool.json.JSONObject;
     import cn.hutool.json.JSONUtil;
-    import com.baoquan.shimakaze.common.util.StringUtils;
     import com.obs.services.ObsClient;
     import com.obs.services.ObsConfiguration;
     import com.obs.services.model.PutObjectRequest;
@@ -204,7 +203,7 @@ java::
         }
 
         private String uploadOss(File file) throws Exception {
-            String suffix = StringUtils.suffix(file.getName());
+            String suffix = suffix(file.getName());
             String ossKey = "enforcer/" + LocalDate.now() + "/" + IdUtil.simpleUUID() + suffix;
             ObsClient obsClient = getObsClient();
             PutObjectRequest request = new PutObjectRequest();
