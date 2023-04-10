@@ -304,7 +304,7 @@ deviceId            执法记录仪编号                               必选
 fileHash            文件hash                                   必选
 name                取证名称                                    必选
 label               取证标签                                    非必选
-evidenceType        取证类型:1.拍照取证，2.录像取证，3.录音取证      必选
+evidenceType        取证类型:1拍照，2录像，3录音                  必选
 fileSize            文件大小                                    必选
 fileName            文件名                                     必选
 fileOssKey          文件上传到oss后的key                         必选
