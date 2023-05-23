@@ -51,8 +51,6 @@ java::
 
         private final String uri = "http://127.0.0.1:10000/shimakaze/api";
 
-        private ObsClient obsClient;
-
         /**
          *
          * @throws Exception
@@ -105,6 +103,41 @@ java::
             evidenceHashParam.setLabel("标签");
             evidenceHashParam.setHashItemList(list);
             httpRequest.body(JSONUtil.toJsonStr(evidenceHashParam));
+            String result;
+            try (HttpResponse httpResponse = httpRequest.execute()) {
+                result = httpResponse.body();
+            }
+            JSON json = JSONUtil.parse(result);
+            System.out.println(json.toString());
+        }
+
+        @Test
+        public void file() throws Exception {
+            // API path
+            String apiName = "/attestation/file";
+            HttpRequest httpRequest = createRequestPost(apiName);
+            // 构建请求参数
+            httpRequest.form("file",new File("/tmp/123.jpg"));
+            httpRequest.form("label","标签");
+            String result;
+            try (HttpResponse httpResponse = httpRequest.execute()) {
+                result = httpResponse.body();
+            }
+            JSON json = JSONUtil.parse(result);
+            System.out.println(json.toString());
+        }
+
+        @Test
+        public void web() throws Exception {
+            // API path
+            String apiName = "/attestation/web";
+            HttpRequest httpRequest = createRequestPost(apiName);
+            // 构建请求参数
+            ApiWebAttestationParam apiWebAttestationParam = new ApiWebAttestationParam();
+            apiWebAttestationParam.setLabel("标签");
+            apiWebAttestationParam.setUrl("https://www.baidu.com");
+            apiWebAttestationParam.setName("取证-百度");
+            httpRequest.body(JSONUtil.toJsonStr(apiWebAttestationParam));
             String result;
             try (HttpResponse httpResponse = httpRequest.execute()) {
                 result = httpResponse.body();
@@ -227,22 +260,10 @@ java::
         }
 
         private ObsClient getObsClient() {
-            if (obsClient != null) {
-                return obsClient;
-            }
-            synchronized (ObsClient.class) {
-                if (obsClient != null) {
-                    return obsClient;
-                }
-                String ak = "ak";
-                String sk = "sk";
-                String endPoint = "https://obs.cn-east-3.myhuaweicloud.com";
-                ObsConfiguration obsConfiguration = new ObsConfiguration();
-                obsConfiguration.setMaxConnections(1000);
-                obsConfiguration.setEndPoint(endPoint);
-                obsClient = new ObsClient(ak, sk, obsConfiguration);
-                return obsClient;
-            }
+            String ak = "ak";
+            String sk = "sk";
+            String endPoint = "https://obs.cn-east-3.myhuaweicloud.com";
+            return new ObsClient(ak, sk, endPoint);
         }
 
         public static void main(String[] args) {
@@ -263,6 +284,38 @@ java::
             System.out.println(nonce);
             System.out.println(data);
             System.out.println(signatureData);
+        }
+
+         public class ApiWebAttestationParam {
+            private String url;
+
+            private String name;
+
+            private String label;
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getLabel() {
+                return label;
+            }
+
+            public void setLabel(String label) {
+                this.label = label;
+            }
         }
 
         static class EvidenceHashParam {

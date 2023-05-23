@@ -88,6 +88,129 @@ b.接口调用失败，则返回JSON数据示例为：::
       "errorMessage": "hash错误"
     }
 
+hash存证（sha256） - /attestation/file
+------------------------------------
+用户进行hash存证。
+
+请求参数
+^^^^^^^^^^^^^^^
+=================  ======================================= ================
+参数名 				描述                                    是否可选
+=================  ======================================= ================
+label               文件标签                                    非必选
+file                文件                                      必选
+=================  ======================================= ================
+
+返回的data
+^^^^^^^^^^^^^^
+
+调用hash存证接口成功后会返回存证id列表
+
+===================  ================================
+字段名 				    描述
+===================  ================================
+fileHash                文件hash
+ano                     存证id
+===================  ================================
+
+以java为例::
+
+    // API path
+    String apiName = "/attestation/file";
+    HttpRequest httpRequest = createRequestPost(apiName);
+    // 构建请求参数
+    httpRequest.form("file",new File("/tmp/123.jpg"));
+    httpRequest.form("label","标签");
+    String result;
+    try (HttpResponse httpResponse = httpRequest.execute()) {
+        result = httpResponse.body();
+    }
+
+返回结果示例:
+a.接口调用成功，则返回JSON数据示例为：::
+
+    {
+      "flag": true,
+      "data": {
+        "fileHash": "ef83964c1bde029d3e1b5018068a6073aadd97f3ec0eacce3b1cec61321466f0",
+        "ano": "867774897051803649"
+      },
+      "statusCode": "000000",
+      "errorMessage": "操作成功"
+    }
+
+b.接口调用失败，则返回JSON数据示例为：::
+
+    {
+      "flag": false,
+      "statusCode": "500003",
+      "errorMessage": "文件上传失败,请稍候重试"
+    }
+
+hash存证（sha256） - /attestation/web
+------------------------------------
+用户进行网页取证。
+
+请求参数
+^^^^^^^^^^^^^^^
+=================  ======================================= ================
+参数名 				描述                                    是否可选
+=================  ======================================= ================
+label               文件标签                                    非必选
+url                 取证链接                                    必选
+name                取证名称                                    必选
+=================  ======================================= ================
+
+返回的data
+^^^^^^^^^^^^^^
+
+调用hash存证接口成功后会返回存证id列表
+
+===================  ================================
+字段名 				    描述
+===================  ================================
+url                     取证链接
+ano                     存证id
+===================  ================================
+
+以java为例::
+
+    // API path
+    String apiName = "/attestation/web";
+    HttpRequest httpRequest = createRequestPost(apiName);
+    // 构建请求参数
+    ApiWebAttestationParam apiWebAttestationParam = new ApiWebAttestationParam();
+    apiWebAttestationParam.setLabel("标签");
+    apiWebAttestationParam.setUrl("https://www.baidu.com");
+    apiWebAttestationParam.setName("取证-百度");
+    httpRequest.body(JSONUtil.toJsonStr(apiWebAttestationParam));
+    String result;
+    try (HttpResponse httpResponse = httpRequest.execute()) {
+        result = httpResponse.body();
+    }
+
+返回结果示例:
+a.接口调用成功，则返回JSON数据示例为：::
+
+    {
+      "flag": true,
+      "data": {
+        "url": "https://www.baidu.com",
+        "ano": "867775689221611521"
+      },
+      "statusCode": "000000",
+      "errorMessage": "操作成功"
+    }
+
+b.接口调用失败，则返回JSON数据示例为：::
+
+    {
+      "flag": false,
+      "statusCode": "520000",
+      "errorMessage": "API套餐不足"
+    }
+
+
 存证列表 - /attestation/list
 ----------------------
 
@@ -98,7 +221,7 @@ b.接口调用失败，则返回JSON数据示例为：::
 =================  ============================================ ============
 参数名 				描述                                          是否可选
 =================  ============================================ ============
-attestationType     存证类型 8.hash存证   默认为8                     非必选
+attestationType     存证类型 0.file,1.web,8.hash  默认为8             非必选
 startTime           开始时间                                         非必选
 endTime             结束时间                                         非必选
 pageNum             当前页码                                         非必选
@@ -129,7 +252,7 @@ info.fileHash           文件hash
 info.fileLabel          文件标签
 info.fileName           文件名
 info.createTime         创建时间
-info.attestationType    存证类型 8:hash存证
+info.attestationType    存证类型 0.file,1.web,8.hash
 info.status             1.上链中,2.上链失败,3.上链成功
 =====================  ===========================================================
 
@@ -241,7 +364,7 @@ fileHash                    文件hash
 label                       文件标签
 fileName                    文件名
 createTime                  创建时间
-attestationType             存证类型 8:hash存证
+attestationType             存证类型 0.file,1.web,8.hash
 status                      1.上链中,2.上链失败,3.上链成功
 pdfUrl                      存证证书下载地址
 blockchainHash              链hash
