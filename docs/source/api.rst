@@ -340,7 +340,7 @@ b.接口调用失败，则返回JSON数据示例为：::
       "errorMessage": "系统错误"
     }
 
-存证详情 - /attestation/info
+详情查询 - /attestation/info
 ----------------------
 
 查询存证详情。
