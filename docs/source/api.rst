@@ -373,6 +373,7 @@ pdfUrl                      存证证书下载地址
 blockchainHash              链hash
 evidenceUrl                 证据地址
 remark                       备注
+evidenceName                    取证名称（网页取证）
 =======================  ================================
 
 
