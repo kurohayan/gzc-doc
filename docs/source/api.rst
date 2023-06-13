@@ -374,6 +374,7 @@ blockchainHash              链hash
 evidenceUrl                 证据地址
 remark                       备注
 evidenceName                    取证名称（网页取证）
+url                        取证链接（网页取证）
 =======================  ================================
 
 
