@@ -8,7 +8,7 @@
 
 
 例如
-当前对接的公证处域名为：‘https://gzc.com’
+当前对接的公证处域名为：`https://gzc.com`
 那么公证处API地址=公证处域名+/shimakaze/api 示例：`https://gzc.com/shimakaze/api`
 
 请求路径=API地址+接口名称，比如hash存证接口的名称是/attestation/hash，则请求路径为
