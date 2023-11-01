@@ -455,6 +455,7 @@ attestationId            存证编号
     HttpRequest httpRequest = createRequestPost(apiName);
     // 构建请求参数
     File file = new File("/tmp/123.mp4");
+    // uploadOss的实现方法参考java示例
     String ossKey = uploadOss(file);
     SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
     param.setName("test");

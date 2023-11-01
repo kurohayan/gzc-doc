@@ -14,9 +14,9 @@ Java
         <version>1.71</version>
     </dependency>
     <dependency>
-        <groupId>com.huaweicloud</groupId>
-        <artifactId>esdk-obs-java-bundle</artifactId>
-        <version>[3.21.11,)</version>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>1.12.576</version>
     </dependency>
 
 
@@ -26,7 +26,6 @@ Java
 java::
 
     import cn.hutool.core.util.IdUtil;
-    import cn.hutool.core.util.RandomUtil;
     import cn.hutool.crypto.SecureUtil;
     import cn.hutool.crypto.digest.SM3;
     import cn.hutool.http.HttpRequest;
@@ -35,10 +34,15 @@ java::
     import cn.hutool.json.JSON;
     import cn.hutool.json.JSONObject;
     import cn.hutool.json.JSONUtil;
-    import com.obs.services.ObsClient;
-    import com.obs.services.ObsConfiguration;
-    import com.obs.services.model.PutObjectRequest;
-    import com.obs.services.model.PutObjectResult;
+    import com.amazonaws.ClientConfiguration;
+    import com.amazonaws.auth.AWSStaticCredentialsProvider;
+    import com.amazonaws.auth.BasicAWSCredentials;
+    import com.amazonaws.client.builder.AwsClientBuilder;
+    import com.amazonaws.services.s3.AmazonS3;
+    import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+    import com.amazonaws.services.s3.model.PutObjectRequest;
+    import com.amazonaws.services.s3.model.PutObjectResult;
+    import com.baoquan.shimakaze.common.util.StringUtils;
     import org.junit.Test;
 
     import java.io.File;
@@ -46,11 +50,43 @@ java::
     import java.nio.file.Paths;
     import java.time.LocalDate;
     import java.util.*;
+    import java.util.concurrent.TimeUnit;
 
     public class ShimakazeApiRequestTest {
 
+
         private final String uri = "http://127.0.0.1:10000/shimakaze/api";
 
+        private AmazonS3 client;
+
+        @Test
+        public void testSubmitEnforcerAttestation() throws Exception {
+            String apiName = "/attestation/enforcer";
+            HttpRequest httpRequest = createRequestPost(apiName);
+            // 构建请求参数
+            File file = new File("/tmp/123.jpg");
+            String ossKey = uploadOss(file);
+            SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
+            param.setName("test");
+            param.setDeviceId("E123456");
+            param.setAddress("地址");
+            param.setLabel("标签");
+            param.setEvidenceType(3);
+            param.setStartTime("2023-04-04 13:10:12");
+            param.setEndTime("2023-04-04 13:30:12");
+            param.setSaveTime("2023-04-04 14:10:10");
+            param.setFileHash(SecureUtil.sha256(file));
+            param.setFileName(file.getName());
+            param.setFileOssKey(ossKey);
+            param.setFileSize(file.length());
+            httpRequest.body(JSONUtil.toJsonStr(param));
+            String result;
+            try (HttpResponse httpResponse = httpRequest.execute()) {
+                result = httpResponse.body();
+            }
+            JSON json = JSONUtil.parse(result);
+            System.out.println(json.toString());
+        }
         /**
          *
          * @throws Exception
@@ -110,14 +146,13 @@ java::
             JSON json = JSONUtil.parse(result);
             System.out.println(json.toString());
         }
-
         @Test
         public void file() throws Exception {
             // API path
             String apiName = "/attestation/file";
             HttpRequest httpRequest = createRequestPost(apiName);
             // 构建请求参数
-            httpRequest.form("file",new File("/tmp/123.jpg"));
+            httpRequest.form("file",new File("/tmp/123.mp4"));
             httpRequest.form("label","标签");
             String result;
             try (HttpResponse httpResponse = httpRequest.execute()) {
@@ -126,7 +161,6 @@ java::
             JSON json = JSONUtil.parse(result);
             System.out.println(json.toString());
         }
-
         @Test
         public void web() throws Exception {
             // API path
@@ -149,7 +183,7 @@ java::
         @Test
         public void download() throws Exception {
             // API path
-            String ano = "840175805404684288";
+            String ano = "868443061574049792";
             String apiName = "/attestation/cert?ano=" + ano;
             HttpRequest httpRequest = createRequestGet(apiName);
             try (HttpResponse httpResponse = httpRequest.execute()) {
@@ -171,38 +205,10 @@ java::
 
         }
 
-        @Test
-        public void testSubmitEnforcerAttestation() throws Exception {
-            String apiName = "/attestation/enforcer";
-            HttpRequest httpRequest = createRequestPost(apiName);
-            // 构建请求参数
-            File file = new File("/tmp/123.mp4");
-            String ossKey = uploadOss(file);
-            SubmitEnforcerRecordParam param = new SubmitEnforcerRecordParam();
-            param.setName("test");
-            param.setDeviceId("E123456");
-            param.setAddress("地址");
-            param.setLabel("标签");
-            param.setEvidenceType(2);
-            param.setStartTime("2023-04-04 13:10:12");
-            param.setEndTime("2023-04-04 13:30:12");
-            param.setSaveTime("2023-04-04 14:10:10");
-            param.setFileHash(SecureUtil.sha256(file));
-            param.setFileName(file.getName());
-            param.setFileOssKey(ossKey);
-            param.setFileSize(file.length());
-            httpRequest.body(JSONUtil.toJsonStr(param));
-            String result;
-            try (HttpResponse httpResponse = httpRequest.execute()) {
-                result = httpResponse.body();
-            }
-            JSON json = JSONUtil.parse(result);
-            System.out.println(json.toString());
-        }
-
         private HttpRequest createRequestPost(String apiName) throws Exception {
             // 构建请求
             HttpRequest httpRequest = HttpUtil.createPost(uri + apiName);
+            httpRequest.setReadTimeout((int)TimeUnit.HOURS.toMillis(1));
             setHttpRequestHeaders(httpRequest);
             return httpRequest;
         }
@@ -214,7 +220,7 @@ java::
         }
 
         private HttpRequest setHttpRequestHeaders(HttpRequest httpRequest) throws Exception {
-            // securityKey
+            // RSA私钥文件路径
             String securityKey = "689d7ff1ebf746389f65c32112c27c76";
             // 请求头
             String requestId = IdUtil.simpleUUID();
@@ -236,18 +242,12 @@ java::
         }
 
         private String uploadOss(File file) throws Exception {
-            String suffix = suffix(file.getName());
+            String suffix = StringUtils.suffix(file.getName());
             String ossKey = "enforcer/" + LocalDate.now() + "/" + IdUtil.simpleUUID() + suffix;
-            ObsClient obsClient = getObsClient();
-            PutObjectRequest request = new PutObjectRequest();
-            request.setBucketName("test");
-            request.setObjectKey(ossKey);
-            request.setFile(file);
-            PutObjectResult result = obsClient.putObject(request);
-            if (result.getStatusCode() == 200) {
-                return ossKey;
-            }
-            throw new Exception("上传失败");
+            AmazonS3 s3Client = getS3Client();
+            PutObjectRequest request = new PutObjectRequest("test-eagle",ossKey,file);
+            PutObjectResult result = s3Client.putObject(request);
+            return ossKey;
         }
 
         private String suffix(String fileName) {
@@ -259,20 +259,37 @@ java::
             }
         }
 
-        private ObsClient getObsClient() {
-            String ak = "ak";
-            String sk = "sk";
-            String endPoint = "https://obs.cn-east-3.myhuaweicloud.com";
-            return new ObsClient(ak, sk, endPoint);
+
+        private AmazonS3 getS3Client() {
+            if (client != null) {
+                return client;
+            }
+            synchronized (AmazonS3.class) {
+                if (client != null) {
+                    return client;
+                }
+                String ak = "ak";
+                String sk = "sk";
+                String endPoint = "https://obs.cn-east-3.myhuaweicloud.com";
+                String region = "cn-east-3";
+                client = AmazonS3ClientBuilder.standard()
+                        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, region))
+                        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ak, sk)))
+                        .enablePathStyleAccess()
+                        .disableChunkedEncoding()
+                        .withClientConfiguration(new ClientConfiguration().withMaxConnections(1000))
+                        .build();
+                return client;
+            }
         }
 
         public static void main(String[] args) {
-            // securityKey
-            String securityKey = "689d7ff1ebf746389f65c32112c27c76";
+            // 私钥文件路径
+            String securityKey = "deab0b4c83494a1bb7b92162614d8c36";
 
             // 请求头
             String requestId = IdUtil.simpleUUID();
-            String appId = "d29f2fd7a8dc42b4";
+            String appId = "20230516qew0doxd";
             long nonce = System.currentTimeMillis() / 1000;
             // API path
             //待签名数据 = requestId+appId+nonce
@@ -286,7 +303,8 @@ java::
             System.out.println(signatureData);
         }
 
-         public class ApiWebAttestationParam {
+
+        public class ApiWebAttestationParam {
             private String url;
 
             private String name;
@@ -507,5 +525,6 @@ java::
         }
 
     }
+
 
 
