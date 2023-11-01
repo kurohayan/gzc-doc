@@ -242,7 +242,7 @@ java::
         }
 
         private String uploadOss(File file) throws Exception {
-            String suffix = StringUtils.suffix(file.getName());
+            String suffix = suffix(file.getName());
             String ossKey = "enforcer/" + LocalDate.now() + "/" + IdUtil.simpleUUID() + suffix;
             AmazonS3 s3Client = getS3Client();
             PutObjectRequest request = new PutObjectRequest("test-eagle",ossKey,file);
