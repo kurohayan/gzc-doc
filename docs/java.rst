@@ -42,7 +42,6 @@ java::
     import com.amazonaws.services.s3.AmazonS3ClientBuilder;
     import com.amazonaws.services.s3.model.PutObjectRequest;
     import com.amazonaws.services.s3.model.PutObjectResult;
-    import com.baoquan.shimakaze.common.util.StringUtils;
     import org.junit.Test;
 
     import java.io.File;
