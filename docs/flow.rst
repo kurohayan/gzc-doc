@@ -17,9 +17,9 @@
     "app-id": "d29f2fd7a8dc42b4",
     "nonce": 1678345454
 
-签名过程用Java代码描述如下::
 
-       // 私钥文件路径
+        签名过程用Java代码描述如下::
+        // 私钥文件路径
         String securityKey = "689d7ff1ebf746389f65c32112c27c76";
 
         // 请求头
@@ -34,9 +34,9 @@
         // 签名字符串
         String signatureData = sm3.digestHex(data);
 
-签名过程用Node代码描述如下::
+        签名过程用Node代码描述如下::
         const { SM3 } = require("gm-crypto"); const fetch = require("node-fetch");
-       // 私钥文件路径
+        // 私钥文件路径
         String securityKey = "689d7ff1ebf746389f65c32112c27c76";
 
         // 请求头
