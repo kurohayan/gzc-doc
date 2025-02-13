@@ -37,9 +37,21 @@
 .. note:: 签名所用的方法是SM3
 
 
+签名过程用Node代码描述如下::
 
+const { SM3 } = require("gm-crypto"); const fetch = require("node-fetch");
 
+const requestId = generateUUId(); const appId = "xxxx"; const securityKey = "xxxxx";
 
+const nonce = Math.floor(Date.now() / 1000);
+
+const data = ${requestId}${appId}${nonce};
+
+const b1 = Buffer.from(securityKey + data, "utf-8");
+
+// 加密 const signatureData = SM3.digest(b1, undefined, "hex");
+
+console.log(signatureData: ${signatureData})
 
 
 
