@@ -10,12 +10,10 @@
 
 **第三步：开始对接API接口。**
 
-
-假定待签名数据头为::
-
-    "request-id": "c62e2a71c0a24dbc8e296d579694eaaa",
-    "app-id": "d29f2fd7a8dc42b4",
-    "nonce": 1678345454
+        假定待签名数据头为::
+        "request-id": "c62e2a71c0a24dbc8e296d579694eaaa",
+        "app-id": "d29f2fd7a8dc42b4",
+        "nonce": 1678345454
 
 
         签名过程用Java代码描述如下::
@@ -33,6 +31,8 @@
         SM3 sm3 = new SM3(securityKey.getBytes());
         // 签名字符串
         String signatureData = sm3.digestHex(data);
+
+
 
         签名过程用Node代码描述如下::
         const { SM3 } = require("gm-crypto"); const fetch = require("node-fetch");
