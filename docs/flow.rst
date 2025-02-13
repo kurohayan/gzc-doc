@@ -34,25 +34,21 @@
         // 签名字符串
         String signatureData = sm3.digestHex(data);
 
-.. note:: 签名所用的方法是SM3
-
-
 签名过程用Node代码描述如下::
+        const { SM3 } = require("gm-crypto"); const fetch = require("node-fetch");
+       // 私钥文件路径
+        String securityKey = "689d7ff1ebf746389f65c32112c27c76";
 
-const { SM3 } = require("gm-crypto"); const fetch = require("node-fetch");
-
-const requestId = generateUUId(); const appId = "xxxx"; const securityKey = "xxxxx";
-
-const nonce = Math.floor(Date.now() / 1000);
-
-const data = ${requestId}${appId}${nonce};
-
-const b1 = Buffer.from(securityKey + data, "utf-8");
-
-// 加密 const signatureData = SM3.digest(b1, undefined, "hex");
-
-console.log(signatureData: ${signatureData})
-
-
-
-
+        // 请求头
+        const requestId = IdUtil.simpleUUID();
+        const appId = "d29f2fd7a8dc42b4";
+        const nonce = Math.floor(Date.now() / 1000);
+        // API path
+        //待签名数据 = requestId+appId+nonce
+        const data = ${requestId}${appId}${nonce};
+        // 开始签名
+        const b1 = Buffer.from(securityKey + data, "utf-8");
+        // 签名字符串
+        const signatureData = SM3.digest(b1, undefined, "hex");
+        console.log(signatureData: ${signatureData})
+.. note:: 签名所用的方法是SM3
